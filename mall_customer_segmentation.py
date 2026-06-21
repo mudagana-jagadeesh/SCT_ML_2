@@ -1,21 +1,6 @@
 """
 Retail Customer Segmentation using K-Means Clustering
-========================================================
-Groups mall/retail customers into segments based on their purchase
-behavior using Annual Income and Spending Score — the two features
-available in the classic "Mall_Customers" dataset.
 
-REQUIRED COLUMNS (as found in Mall_Customers.csv):
-  - CustomerID
-  - Genre                    (Male/Female)
-  - Age
-  - Annual Income (k$)
-  - Spending Score (1-100)   (store-assigned score based on purchase behavior)
-
-Usage:
-  python mall_customer_segmentation.py Mall_Customers.csv
-  python mall_customer_segmentation.py                     # looks for Mall_Customers.csv in cwd
-"""
 
 import sys
 import numpy as np
@@ -26,9 +11,6 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
 
-# ----------------------------------------------------------------------
-# 1. DATA LOADING
-# ----------------------------------------------------------------------
 def load_data(path):
     df = pd.read_csv(path)
     required = {"CustomerID", "Annual Income (k$)", "Spending Score (1-100)"}
@@ -38,9 +20,6 @@ def load_data(path):
     return df
 
 
-# ----------------------------------------------------------------------
-# 2. CHOOSE K: elbow method + silhouette score
-# ----------------------------------------------------------------------
 def evaluate_k_range(X_scaled, k_range=range(2, 9), random_state=42):
     inertias, silhouettes = [], []
     for k in k_range:
@@ -76,10 +55,6 @@ def plot_k_selection(k_values, inertias, silhouettes, out_path):
     plt.close(fig)
     return best_k
 
-
-# ----------------------------------------------------------------------
-# 3. FIT FINAL MODEL + LABEL SEGMENTS
-# ----------------------------------------------------------------------
 def label_segment(row, df):
     """Heuristic, human-readable label based on how a cluster's average
     income/spending compares to the overall customer base."""
@@ -137,11 +112,7 @@ def plot_segment_profiles(profile, out_path):
     fig.tight_layout()
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
-
-
-# ----------------------------------------------------------------------
-# MAIN PIPELINE
-# ----------------------------------------------------------------------
+    
 def main(input_path="Mall_Customers.csv", output_dir="."):
     df = load_data(input_path)
     print(f"Loaded {len(df)} customers.\n")
